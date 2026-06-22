@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
 from datetime import datetime
 import re
+import base64
 
 app = Flask(__name__)
+MAX_PHOTO_BYTES = 3 * 1024 * 1024  # 3 MB
 
 
 def _zip_fields(form, *names):
@@ -22,7 +24,23 @@ VALID_TEMPLATES = {"colophon", "ledger", "atlas", "mono", "studio", "myy"}
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
-def build_context(form):
+def _photo_data_uri(files):
+    """Read an uploaded image file and return it as a data: URI, or None."""
+    photo = files.get("photo_file")
+    if not photo or not photo.filename:
+        return None
+    mimetype = photo.mimetype or ""
+    if not mimetype.startswith("image/"):
+        return None
+    data = photo.read()
+    if not data or len(data) > MAX_PHOTO_BYTES:
+        return None
+    encoded = base64.b64encode(data).decode("ascii")
+    return f"data:{mimetype};base64,{encoded}"
+
+
+def build_context(form, files=None):
+    files = files if files is not None else {}
     experience = _zip_fields(
         form, "exp_role", "exp_company", "exp_location", "exp_start", "exp_end", "exp_bullets"
     )
@@ -64,7 +82,7 @@ def build_context(form):
         "accent_color": accent_color,
         "full_name": form.get("full_name", "").strip(),
         "title": form.get("title", "").strip(),
-        "photo_url": form.get("photo_url", "").strip(),
+        "photo_data_uri": _photo_data_uri(files),
         "email": form.get("email", "").strip(),
         "phone": form.get("phone", "").strip(),
         "location": form.get("location", "").strip(),
@@ -89,13 +107,13 @@ def index():
 
 @app.route("/preview", methods=["GET", "POST"])
 def preview():
-    ctx = build_context(request.values)
+    ctx = build_context(request.values, request.files)
     return render_template("_preview.html", **ctx)
 
 
 @app.route("/cv", methods=["GET", "POST"])
 def cv():
-    ctx = build_context(request.values)
+    ctx = build_context(request.values, request.files)
     return render_template("print.html", **ctx)
 
 

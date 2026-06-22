@@ -30,7 +30,7 @@
       </button>
     </div>
 
-    <form id="cv-form" class="desk-form" method="post" action="/preview">
+    <form id="cv-form" class="desk-form" method="post" action="/preview" enctype="multipart/form-data">
 
       <fieldset>
         <legend>Template</legend>
@@ -60,7 +60,11 @@
             <span class="tpl-swatch swatch-studio"><span></span><span></span></span>
             <span class="tpl-name">Studio</span>
           </label>
-          
+          <label class="tpl-card">
+            <input type="radio" name="template" value="myy">
+            <span class="tpl-swatch swatch-myy"><span></span><span></span></span>
+            <span class="tpl-name">MYY</span>
+          </label>
         </div>
       </fieldset>
 
@@ -114,7 +118,9 @@
         <legend>Header</legend>
         <label>Full name<input type="text" name="full_name" placeholder="Jordan Avery" required></label>
         <label>Role / headline<input type="text" name="title" placeholder="Senior Product Designer"></label>
-        <label>Photo URL <span class="hint">optional — used by the MYY template</span><input type="text" name="photo_url" placeholder="https://example.com/me.jpg"></label>
+        <label>Photo <span class="hint">optional — used by the MYY template, max 3MB</span>
+          <input type="file" name="photo_file" accept="image/*" class="file-input">
+        </label>
         <div class="grid-2">
           <label>Email<input type="email" name="email" placeholder="jordan@email.com"></label>
           <label>Phone<input type="text" name="phone" placeholder="+1 555 010 2030"></label>

@@ -182,6 +182,27 @@ input::placeholder, textarea::placeholder { color: #5e5a4f; }
 input:focus, textarea:focus { border-color: var(--clay); }
 textarea { resize: vertical; }
 
+input[type="file"] {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--desk-text-dim);
+}
+input[type="file"]::file-selector-button {
+  background: var(--desk-bg-raised);
+  border: 1px solid var(--desk-line);
+  color: var(--desk-text);
+  border-radius: 3px;
+  padding: 7px 12px;
+  margin-right: 10px;
+  font-family: var(--sans);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+input[type="file"]::file-selector-button:hover { border-color: var(--clay); color: var(--clay); }
+
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .rows .row {

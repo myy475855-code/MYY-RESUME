@@ -1,0 +1,113 @@
+<article class="resume resume--myy my-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <aside class="my-sidebar">
+    <div class="my-avatar">
+      {% if photo_data_uri %}
+      <img src="{{ photo_data_uri }}" alt="{{ full_name }}">
+      {% else %}
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="50" fill="#f1ede6"/>
+        <circle cx="50" cy="40" r="18" fill="#c7c2b8"/>
+        <path d="M14 96 C14 70 30 58 50 58 C70 58 86 70 86 96 Z" fill="#c7c2b8"/>
+      </svg>
+      {% endif %}
+    </div>
+
+    <h3 class="my-block-title">Contact</h3>
+    <ul class="my-list">
+      {% if phone %}<li>{{ phone }}</li>{% endif %}
+      {% if email %}<li>{{ email }}</li>{% endif %}
+      {% if location %}<li>{{ location }}</li>{% endif %}
+    </ul>
+
+    {% if website or linkedin or github %}
+    <h3 class="my-block-title">Social Links</h3>
+    <ul class="my-list my-list--bullet">
+      {% if github %}<li><strong>Github:</strong><br>{{ github }}</li>{% endif %}
+      {% if linkedin %}<li><strong>LinkedIn:</strong><br>{{ linkedin }}</li>{% endif %}
+      {% if website %}<li><strong>Website:</strong><br>{{ website }}</li>{% endif %}
+    </ul>
+    {% endif %}
+
+    {% if skill_groups %}
+    <h3 class="my-block-title">Skills</h3>
+    <ul class="my-list my-list--bullet">
+      {% for g in skill_groups %}
+        {% for s in g.skills %}<li>{{ s }}</li>{% endfor %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if languages %}
+    <h3 class="my-block-title">Languages</h3>
+    <ul class="my-list my-list--bullet">
+      {% for l in languages %}<li>{{ l.lang_name }}{% if l.lang_level %} — {{ l.lang_level }}{% endif %}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </aside>
+
+  <main class="my-main">
+    <h1 class="my-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="my-tagline">{{ title }}</p>{% endif %}
+
+    {% if summary %}
+    <section class="my-section">
+      <h2 class="my-heading">Professional Profile</h2>
+      <p class="my-summary">{{ summary }}</p>
+    </section>
+    {% endif %}
+
+    {% if experience %}
+    <section class="my-section">
+      <h2 class="my-heading">Work Experience</h2>
+      {% for job in experience %}
+      <div class="my-entry">
+        <p class="my-entry-title">{{ job.exp_role }}</p>
+        <p class="my-entry-sub">
+          {{ job.exp_company }}{% if job.exp_start or job.exp_end %} — {{ job.exp_start }} to {{ job.exp_end or "Present" }}{% endif %}
+        </p>
+        {% if job.bullets %}
+        <ul class="my-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if education %}
+    <section class="my-section">
+      <h2 class="my-heading">Academic History</h2>
+      {% for ed in education %}
+      <div class="my-entry">
+        <p class="my-entry-title">{{ ed.edu_degree }}</p>
+        <p class="my-entry-sub">
+          {{ ed.edu_school }}{% if ed.edu_start or ed.edu_end %} — {{ ed.edu_start }} to {{ ed.edu_end }}{% endif %}
+        </p>
+        {% if ed.edu_details %}<p class="my-entry-detail">{{ ed.edu_details }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if projects %}
+    <section class="my-section">
+      <h2 class="my-heading">Projects</h2>
+      {% for p in projects %}
+      <div class="my-entry">
+        <p class="my-entry-title">{{ p.proj_name }}</p>
+        {% if p.proj_desc %}<p class="my-entry-detail">{{ p.proj_desc }}</p>{% endif %}
+        {% if p.proj_link %}<p class="my-entry-sub">{{ p.proj_link }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if certifications %}
+    <section class="my-section">
+      <h2 class="my-heading">Certifications</h2>
+      {% for c in certifications %}
+      <p class="my-entry-sub">{{ c.cert_name }}{% if c.cert_org %}, {{ c.cert_org }}{% endif %}{% if c.cert_year %} — {{ c.cert_year }}{% endif %}</p>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </main>
+</article>
