@@ -1,0 +1,87 @@
+<article class="resume resume--mono mn-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="mn-header">
+    <h1 class="mn-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="mn-role">{{ title }}</p>{% endif %}
+    <p class="mn-contact-line">
+      {{ [email, phone, location, website, linkedin, github] | select | join("  ·  ") }}
+    </p>
+  </header>
+  <hr class="mn-rule">
+
+  {% if summary %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Profile</h2>
+    <p>{{ summary }}</p>
+  </section>
+  {% endif %}
+
+  {% if experience %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Experience</h2>
+    {% for job in experience %}
+    <div class="mn-entry">
+      <p class="mn-entry-head">
+        <span class="mn-entry-title">{{ job.exp_role }}{% if job.exp_company %}, {{ job.exp_company }}{% endif %}</span>
+        <span class="mn-entry-date">{% if job.exp_start or job.exp_end %}{{ job.exp_start }}–{{ job.exp_end or "Present" }}{% endif %}</span>
+      </p>
+      {% if job.exp_location %}<p class="mn-entry-sub">{{ job.exp_location }}</p>{% endif %}
+      {% if job.bullets %}
+      <ul class="mn-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if education %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Education</h2>
+    {% for ed in education %}
+    <div class="mn-entry">
+      <p class="mn-entry-head">
+        <span class="mn-entry-title">{{ ed.edu_degree }}{% if ed.edu_school %}, {{ ed.edu_school }}{% endif %}</span>
+        <span class="mn-entry-date">{% if ed.edu_start or ed.edu_end %}{{ ed.edu_start }}–{{ ed.edu_end }}{% endif %}</span>
+      </p>
+      {% if ed.edu_details %}<p class="mn-entry-sub">{{ ed.edu_details }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if skill_groups %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Skills</h2>
+    {% for g in skill_groups %}
+    <p class="mn-skill-row">{% if g.skill_group %}<strong>{{ g.skill_group }}:</strong> {% endif %}{{ g.skills | join(", ") }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if projects %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Projects</h2>
+    {% for p in projects %}
+    <div class="mn-entry">
+      <p class="mn-entry-head"><span class="mn-entry-title">{{ p.proj_name }}{% if p.proj_link %}, {{ p.proj_link }}{% endif %}</span></p>
+      {% if p.proj_desc %}<p class="mn-entry-sub">{{ p.proj_desc }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if certifications %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Certifications</h2>
+    {% for c in certifications %}
+    <p class="mn-skill-row">{{ c.cert_name }}{% if c.cert_org %}, {{ c.cert_org }}{% endif %}{% if c.cert_year %}, {{ c.cert_year }}{% endif %}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if languages %}
+  <section class="mn-section">
+    <h2 class="mn-heading">Languages</h2>
+    <p class="mn-skill-row">{% for l in languages %}{{ l.lang_name }}{% if l.lang_level %} ({{ l.lang_level }}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+  </section>
+  {% endif %}
+</article>

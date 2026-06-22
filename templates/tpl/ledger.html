@@ -1,0 +1,103 @@
+<article class="resume resume--ledger lg-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <div class="lg-masthead">
+    <!-- <p class="lg-kicker">Career Edition · Issue No. 01 · {{ generated_on }}</p> -->
+    <h1 class="lg-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="lg-role">{{ title }}</p>{% endif %}
+    <div class="lg-rule-set"><span class="lg-rule-thick"></span><span class="lg-rule-thin"></span></div>
+  </div>
+
+  <div class="lg-contact-bar">
+    {% if email %}<span>{{ email }}</span>{% endif %}
+    {% if phone %}<span>{{ phone }}</span>{% endif %}
+    {% if location %}<span>{{ location }}</span>{% endif %}
+    {% if website %}<span>{{ website }}</span>{% endif %}
+    {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+    {% if github %}<span>{{ github }}</span>{% endif %}
+  </div>
+
+  {% if summary %}
+  <section class="lg-lede">
+    <p>{{ summary }}</p>
+  </section>
+  {% endif %}
+
+  <div class="lg-columns">
+    <div class="lg-col-main">
+      {% if experience %}
+      <section class="lg-section">
+        <h2 class="lg-heading">Experience</h2>
+        {% for job in experience %}
+        <div class="lg-entry">
+          <div class="lg-entry-head">
+            <span class="lg-entry-title">{{ job.exp_role }}{% if job.exp_company %}, {{ job.exp_company }}{% endif %}</span>
+            <span class="lg-entry-date">{% if job.exp_start or job.exp_end %}{{ job.exp_start }}–{{ job.exp_end or "Present" }}{% endif %}</span>
+          </div>
+          {% if job.exp_location %}<p class="lg-entry-sub">{{ job.exp_location }}</p>{% endif %}
+          {% if job.bullets %}
+          <ul class="lg-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if projects %}
+      <section class="lg-section">
+        <h2 class="lg-heading">Projects</h2>
+        {% for p in projects %}
+        <div class="lg-entry">
+          <div class="lg-entry-head">
+            <span class="lg-entry-title">{{ p.proj_name }}{% if p.proj_link %} — {{ p.proj_link }}{% endif %}</span>
+          </div>
+          {% if p.proj_desc %}<p class="lg-entry-sub">{{ p.proj_desc }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+    </div>
+
+    <div class="lg-col-side">
+      {% if education %}
+      <section class="lg-section">
+        <h2 class="lg-heading lg-heading--side">Education</h2>
+        {% for ed in education %}
+        <div class="lg-entry lg-entry--side">
+          <p class="lg-entry-title">{{ ed.edu_degree }}</p>
+          {% if ed.edu_school %}<p class="lg-entry-sub">{{ ed.edu_school }}</p>{% endif %}
+          <p class="lg-entry-date">{% if ed.edu_start or ed.edu_end %}{{ ed.edu_start }}–{{ ed.edu_end }}{% endif %}</p>
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if skill_groups %}
+      <section class="lg-section">
+        <h2 class="lg-heading lg-heading--side">Skills</h2>
+        {% for g in skill_groups %}
+        <p class="lg-skill-row"><strong>{{ g.skill_group }}:</strong> {{ g.skills | join(", ") }}</p>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if certifications %}
+      <section class="lg-section">
+        <h2 class="lg-heading lg-heading--side">Certifications</h2>
+        {% for c in certifications %}
+        <p class="lg-skill-row">{{ c.cert_name }}{% if c.cert_org %}, {{ c.cert_org }}{% endif %}{% if c.cert_year %} ({{ c.cert_year }}){% endif %}</p>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if languages %}
+      <section class="lg-section">
+        <h2 class="lg-heading lg-heading--side">Languages</h2>
+        {% for l in languages %}
+        <p class="lg-skill-row">{{ l.lang_name }}{% if l.lang_level %} — {{ l.lang_level }}{% endif %}</p>
+        {% endfor %}
+      </section>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer class="lg-colophon">Typeset {{ generated_on }}</footer>
+</article>

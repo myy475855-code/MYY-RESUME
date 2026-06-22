@@ -1,0 +1,110 @@
+<article class="resume resume--atlas at-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <aside class="at-sidebar">
+    <h1 class="at-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="at-role">{{ title }}</p>{% endif %}
+
+    <div class="at-block">
+      <h3 class="at-block-title">Contact</h3>
+      <ul class="at-list">
+        {% if email %}<li>{{ email }}</li>{% endif %}
+        {% if phone %}<li>{{ phone }}</li>{% endif %}
+        {% if location %}<li>{{ location }}</li>{% endif %}
+        {% if website %}<li>{{ website }}</li>{% endif %}
+        {% if linkedin %}<li>{{ linkedin }}</li>{% endif %}
+        {% if github %}<li>{{ github }}</li>{% endif %}
+      </ul>
+    </div>
+
+    {% if skill_groups %}
+    <div class="at-block">
+      <h3 class="at-block-title">Skills</h3>
+      {% for g in skill_groups %}
+      {% if g.skill_group %}<p class="at-skill-group">{{ g.skill_group }}</p>{% endif %}
+      <div class="at-pills">{% for s in g.skills %}<span class="at-pill">{{ s }}</span>{% endfor %}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if certifications %}
+    <div class="at-block">
+      <h3 class="at-block-title">Certifications</h3>
+      <ul class="at-list">
+        {% for c in certifications %}
+        <li>{{ c.cert_name }}{% if c.cert_year %} <span class="at-dim">· {{ c.cert_year }}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if languages %}
+    <div class="at-block">
+      <h3 class="at-block-title">Languages</h3>
+      <ul class="at-list">
+        {% for l in languages %}
+        <li>{{ l.lang_name }}{% if l.lang_level %} <span class="at-dim">· {{ l.lang_level }}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </aside>
+
+  <main class="at-main">
+    {% if summary %}
+    <section class="at-section">
+      <h2 class="at-heading">Profile</h2>
+      <p class="at-summary">{{ summary }}</p>
+    </section>
+    {% endif %}
+
+    {% if experience %}
+    <section class="at-section">
+      <h2 class="at-heading">Experience</h2>
+      <div class="at-timeline">
+        {% for job in experience %}
+        <div class="at-tl-item">
+          <span class="at-tl-dot"></span>
+          <div class="at-tl-content">
+            <div class="at-tl-head">
+              <span class="at-tl-title">{{ job.exp_role }}</span>
+              <span class="at-tl-date">{% if job.exp_start or job.exp_end %}{{ job.exp_start }}–{{ job.exp_end or "Present" }}{% endif %}</span>
+            </div>
+            <p class="at-tl-org">{{ job.exp_company }}{% if job.exp_location %} · {{ job.exp_location }}{% endif %}</p>
+            {% if job.bullets %}
+            <ul class="at-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if education %}
+    <section class="at-section">
+      <h2 class="at-heading">Education</h2>
+      {% for ed in education %}
+      <div class="at-entry">
+        <div class="at-tl-head">
+          <span class="at-tl-title">{{ ed.edu_degree }}</span>
+          <span class="at-tl-date">{% if ed.edu_start or ed.edu_end %}{{ ed.edu_start }}–{{ ed.edu_end }}{% endif %}</span>
+        </div>
+        <p class="at-tl-org">{{ ed.edu_school }}{% if ed.edu_location %} · {{ ed.edu_location }}{% endif %}</p>
+        {% if ed.edu_details %}<p class="at-entry-detail">{{ ed.edu_details }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if projects %}
+    <section class="at-section">
+      <h2 class="at-heading">Projects</h2>
+      {% for p in projects %}
+      <div class="at-entry">
+        <div class="at-tl-head"><span class="at-tl-title">{{ p.proj_name }}</span></div>
+        {% if p.proj_desc %}<p class="at-entry-detail">{{ p.proj_desc }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </main>
+</article>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ full_name or "Resume" }} — CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="print-body">
+  <div class="print-toolbar no-print">
+    <span>Ready to save — use your browser's print dialog and choose "Save as PDF".</span>
+    <button onclick="window.print()">Print / Save PDF</button>
+  </div>
+  <div class="page-wrap">
+    {% include "_preview.html" %}
+  </div>
+</body>
+</html>

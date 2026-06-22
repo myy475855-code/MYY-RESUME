@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYY Resume — CV Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script>
+  (function () {
+    var saved = localStorage.getItem("myy-theme");
+    if (saved === "light") document.documentElement.classList.add("light-theme");
+  })();
+</script>
+</head>
+<body>
+<div class="app">
+
+  <aside class="desk">
+    <div class="desk-brand">
+      <span class="desk-mark">¶</span>
+      <div>
+        <h1>MYY Resume</h1>
+        <p>A CV, typeset as you write it.</p>
+      </div>
+      <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light and dark mode" title="Toggle light/dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+      </button>
+    </div>
+
+    <form id="cv-form" class="desk-form" method="post" action="/preview">
+
+      <fieldset>
+        <legend>Template</legend>
+        <div class="template-grid">
+          <label class="tpl-card">
+            <input type="radio" name="template" value="colophon" checked>
+            <span class="tpl-swatch swatch-colophon"><span></span></span>
+            <span class="tpl-name">Colophon</span>
+          </label>
+          <label class="tpl-card">
+            <input type="radio" name="template" value="ledger">
+            <span class="tpl-swatch swatch-ledger"><span></span><span></span></span>
+            <span class="tpl-name">Ledger</span>
+          </label>
+          <label class="tpl-card">
+            <input type="radio" name="template" value="atlas">
+            <span class="tpl-swatch swatch-atlas"><span></span><span></span></span>
+            <span class="tpl-name">Atlas</span>
+          </label>
+          <label class="tpl-card">
+            <input type="radio" name="template" value="mono">
+            <span class="tpl-swatch swatch-mono"><span></span></span>
+            <span class="tpl-name">Mono</span>
+          </label>
+          <label class="tpl-card">
+            <input type="radio" name="template" value="studio">
+            <span class="tpl-swatch swatch-studio"><span></span><span></span></span>
+            <span class="tpl-name">Studio</span>
+          </label>
+          
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Accent Color</legend>
+        <div class="accent-grid">
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="" checked>
+            <span class="accent-swatch accent-default" title="Use each template's own color"></span>
+            <span class="accent-label">Default</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#b5502f">
+            <span class="accent-swatch" style="background:#b5502f"></span>
+            <span class="accent-label">Clay</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#8c1c13">
+            <span class="accent-swatch" style="background:#8c1c13"></span>
+            <span class="accent-label">Crimson</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#2ba3a3">
+            <span class="accent-swatch" style="background:#2ba3a3"></span>
+            <span class="accent-label">Teal</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#3d3a8c">
+            <span class="accent-swatch" style="background:#3d3a8c"></span>
+            <span class="accent-label">Indigo</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#2f6b4f">
+            <span class="accent-swatch" style="background:#2f6b4f"></span>
+            <span class="accent-label">Forest</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#3a5a8c">
+            <span class="accent-swatch" style="background:#3a5a8c"></span>
+            <span class="accent-label">Slate</span>
+          </label>
+          <label class="accent-card">
+            <input type="radio" name="accent_color" value="#7a3b69">
+            <span class="accent-swatch" style="background:#7a3b69"></span>
+            <span class="accent-label">Plum</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Header</legend>
+        <label>Full name<input type="text" name="full_name" placeholder="Jordan Avery" required></label>
+        <label>Role / headline<input type="text" name="title" placeholder="Senior Product Designer"></label>
+        <label>Photo URL <span class="hint">optional — used by the MYY template</span><input type="text" name="photo_url" placeholder="https://example.com/me.jpg"></label>
+        <div class="grid-2">
+          <label>Email<input type="email" name="email" placeholder="jordan@email.com"></label>
+          <label>Phone<input type="text" name="phone" placeholder="+1 555 010 2030"></label>
+        </div>
+        <div class="grid-2">
+          <label>Location<input type="text" name="location" placeholder="Austin, TX"></label>
+          <label>Website<input type="text" name="website" placeholder="jordanavery.com"></label>
+        </div>
+        <div class="grid-2">
+          <label>LinkedIn<input type="text" name="linkedin" placeholder="/in/jordanavery"></label>
+          <label>GitHub<input type="text" name="github" placeholder="github.com/javery"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Profile</legend>
+        <label>Summary<textarea name="summary" rows="3" placeholder="A two or three sentence pitch — what you do, for whom, and what you're known for."></textarea></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Experience</legend>
+        <div id="exp-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="exp-template" data-target="exp-rows">+ Add role</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Education</legend>
+        <div id="edu-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="edu-template" data-target="edu-rows">+ Add education</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Skills</legend>
+        <div id="skill-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="skill-template" data-target="skill-rows">+ Add skill group</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Languages <span class="optional">optional</span></legend>
+        <div id="lang-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="lang-template" data-target="lang-rows">+ Add language</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Projects <span class="optional">optional</span></legend>
+        <div id="proj-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="proj-template" data-target="proj-rows">+ Add project</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Certifications <span class="optional">optional</span></legend>
+        <div id="cert-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="cert-template" data-target="cert-rows">+ Add certification</button>
+      </fieldset>
+
+      <div class="desk-actions">
+        <button type="submit" formaction="/cv" formtarget="_blank" class="primary">Open print-ready CV ↗</button>
+      </div>
+    </form>
+  </aside>
+
+  <main class="canvas">
+    <div class="canvas-toolbar">
+      <span class="spinner" id="spinner" aria-hidden="true"></span>
+      <span class="canvas-status" id="status">Typing updates the page on the right.</span>
+    </div>
+    <div class="page-wrap" id="preview">
+      <article class="resume placeholder">
+        <p>Start filling in the desk on the left — your CV will typeset itself here, line by line.</p>
+      </article>
+    </div>
+  </main>
+</div>
+
+<!-- Row templates (cloned by JS) -->
+<template id="exp-template">
+  <div class="row" data-row>
+    <button type="button" class="remove-row" aria-label="Remove">×</button>
+    <div class="grid-2">
+      <label>Role<input type="text" name="exp_role" placeholder="Senior Designer"></label>
+      <label>Company<input type="text" name="exp_company" placeholder="Northwind Co."></label>
+    </div>
+    <div class="grid-2">
+      <label>Location<input type="text" name="exp_location" placeholder="Remote"></label>
+      <div class="grid-2">
+        <label>Start<input type="text" name="exp_start" placeholder="2022"></label>
+        <label>End<input type="text" name="exp_end" placeholder="Present"></label>
+      </div>
+    </div>
+    <label>Highlights <span class="hint">one per line</span><textarea name="exp_bullets" rows="3" placeholder="Led redesign of checkout, lifting conversion 18%"></textarea></label>
+  </div>
+</template>
+
+<template id="edu-template">
+  <div class="row" data-row>
+    <button type="button" class="remove-row" aria-label="Remove">×</button>
+    <div class="grid-2">
+      <label>Degree<input type="text" name="edu_degree" placeholder="B.A. Graphic Design"></label>
+      <label>School<input type="text" name="edu_school" placeholder="Rhode Island School of Design"></label>
+    </div>
+    <div class="grid-2">
+      <label>Location<input type="text" name="edu_location" placeholder="Providence, RI"></label>
+      <div class="grid-2">
+        <label>Start<input type="text" name="edu_start" placeholder="2014"></label>
+        <label>End<input type="text" name="edu_end" placeholder="2018"></label>
+      </div>
+    </div>
+    <label>Details <span class="hint">honors, focus, GPA</span><input type="text" name="edu_details" placeholder="Graduated with honors"></label>
+  </div>
+</template>
+
+<template id="skill-template">
+  <div class="row" data-row>
+    <button type="button" class="remove-row" aria-label="Remove">×</button>
+    <div class="grid-2">
+      <label>Group label<input type="text" name="skill_group" placeholder="Design"></label>
+      <label>Skills <span class="hint">comma separated</span><input type="text" name="skill_items" placeholder="Figma, Prototyping, Design systems"></label>
+    </div>
+  </div>
+</template>
+
+<template id="proj-template">
+  <div class="row" data-row>
+    <button type="button" class="remove-row" aria-label="Remove">×</button>
+    <div class="grid-2">
+      <label>Project name<input type="text" name="proj_name" placeholder="Field Notes app"></label>
+      <label>Link <span class="hint">optional</span><input type="text" name="proj_link" placeholder="fieldnotes.app"></label>
+    </div>
+    <label>Description<textarea name="proj_desc" rows="2" placeholder="What it does and why it mattered."></textarea></label>
+  </div>
+</template>
+
+<template id="lang-template">
+  <div class="row" data-row>
+    <button type="button" class="remove-row" aria-label="Remove">×</button>
+    <div class="grid-2">
+      <label>Language<input type="text" name="lang_name" placeholder="English"></label>
+      <label>Level<input type="text" name="lang_level" placeholder="Conversational"></label>
+    </div>
+  </div>
+</template>
+
+<template id="cert-template">
+  <div class="row" data-row>
+    <button type="button" class="remove-row" aria-label="Remove">×</button>
+    <div class="grid-2">
+      <label>Certification<input type="text" name="cert_name" placeholder="AWS Solutions Architect"></label>
+      <label>Issuer<input type="text" name="cert_org" placeholder="Amazon Web Services"></label>
+    </div>
+    <label>Year<input type="text" name="cert_year" placeholder="2023"></label>
+  </div>
+</template>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

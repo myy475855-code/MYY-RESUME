@@ -1,0 +1,113 @@
+<article class="resume resume--studio st-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="st-band">
+    <h1 class="st-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="st-role">{{ title }}</p>{% endif %}
+    <div class="st-contact-row">
+      {% if email %}<span class="st-contact-pill">{{ email }}</span>{% endif %}
+      {% if phone %}<span class="st-contact-pill">{{ phone }}</span>{% endif %}
+      {% if location %}<span class="st-contact-pill">{{ location }}</span>{% endif %}
+      {% if website %}<span class="st-contact-pill">{{ website }}</span>{% endif %}
+      {% if linkedin %}<span class="st-contact-pill">{{ linkedin }}</span>{% endif %}
+      {% if github %}<span class="st-contact-pill">{{ github }}</span>{% endif %}
+    </div>
+  </header>
+
+  <div class="st-body">
+    {% if summary %}
+    <section class="st-section">
+      <h2 class="st-heading">Profile</h2>
+      <p class="st-summary">{{ summary }}</p>
+    </section>
+    {% endif %}
+
+    {% if experience %}
+    <section class="st-section">
+      <h2 class="st-heading">Experience</h2>
+      {% for job in experience %}
+      <div class="st-entry">
+        <div class="st-entry-head">
+          <div>
+            <span class="st-entry-title">{{ job.exp_role }}</span>
+            {% if job.exp_company %}<span class="st-entry-org">{{ job.exp_company }}</span>{% endif %}
+          </div>
+          {% if job.exp_start or job.exp_end %}<span class="st-date-badge">{{ job.exp_start }}–{{ job.exp_end or "Present" }}</span>{% endif %}
+        </div>
+        {% if job.exp_location %}<p class="st-entry-sub">{{ job.exp_location }}</p>{% endif %}
+        {% if job.bullets %}
+        <ul class="st-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if skill_groups %}
+    <section class="st-section">
+      <h2 class="st-heading">Skills</h2>
+      {% for g in skill_groups %}
+      <div class="st-skill-row">
+        {% if g.skill_group %}<span class="st-skill-label">{{ g.skill_group }}</span>{% endif %}
+        <div class="st-pills">{% for s in g.skills %}<span class="st-pill">{{ s }}</span>{% endfor %}</div>
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if education %}
+    <section class="st-section">
+      <h2 class="st-heading">Education</h2>
+      {% for ed in education %}
+      <div class="st-entry">
+        <div class="st-entry-head">
+          <div>
+            <span class="st-entry-title">{{ ed.edu_degree }}</span>
+            {% if ed.edu_school %}<span class="st-entry-org">{{ ed.edu_school }}</span>{% endif %}
+          </div>
+          {% if ed.edu_start or ed.edu_end %}<span class="st-date-badge">{{ ed.edu_start }}–{{ ed.edu_end }}</span>{% endif %}
+        </div>
+        {% if ed.edu_details %}<p class="st-entry-sub">{{ ed.edu_details }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if projects %}
+    <section class="st-section">
+      <h2 class="st-heading">Projects</h2>
+      {% for p in projects %}
+      <div class="st-entry">
+        <div class="st-entry-head">
+          <div>
+            <span class="st-entry-title">{{ p.proj_name }}</span>
+            {% if p.proj_link %}<span class="st-entry-org">{{ p.proj_link }}</span>{% endif %}
+          </div>
+        </div>
+        {% if p.proj_desc %}<p class="st-entry-sub">{{ p.proj_desc }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if certifications %}
+    <section class="st-section">
+      <h2 class="st-heading">Certifications</h2>
+      <div class="st-pills">
+        {% for c in certifications %}
+        <span class="st-pill st-pill--cert">{{ c.cert_name }}{% if c.cert_year %} · {{ c.cert_year }}{% endif %}</span>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if languages %}
+    <section class="st-section">
+      <h2 class="st-heading">Languages</h2>
+      <div class="st-pills">
+        {% for l in languages %}
+        <span class="st-pill">{{ l.lang_name }}{% if l.lang_level %} · {{ l.lang_level }}{% endif %}</span>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</article>
