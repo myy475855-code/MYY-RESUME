@@ -15,6 +15,35 @@
 </script>
 </head>
 <body>
+
+<!-- Logo loader: shown until the page has loaded, then fades out -->
+<div id="app-loader" class="app-loader" role="status" aria-live="polite" aria-label="Loading MYY Resume Creator">
+  <div class="ld-stage">
+    <img class="ld-icon" src="{{ url_for('static', filename='loader-icon.png') }}" width="480" height="253" alt="">
+    <img class="ld-word" src="{{ url_for('static', filename='loader-word.png') }}" width="480" height="165" alt="MYY Resume Creator">
+    <div class="ld-bar" aria-hidden="true"><span></span></div>
+  </div>
+</div>
+<noscript><style>#app-loader { display: none; }</style></noscript>
+<script>
+  (function () {
+    var loader = document.getElementById("app-loader");
+    if (!loader) return;
+    var started = Date.now(), MIN_MS = 1400, done = false;
+    function hide() {
+      if (done) return;
+      done = true;
+      setTimeout(function () {
+        loader.classList.add("is-done");
+        setTimeout(function () { loader.remove(); }, 600);
+      }, Math.max(0, MIN_MS - (Date.now() - started)));
+    }
+    if (document.readyState === "complete") hide();
+    else window.addEventListener("load", hide);
+    setTimeout(hide, 7000); // safety net if something is slow to load
+  })();
+</script>
+
 <div class="app">
 
   <aside class="desk">
@@ -31,6 +60,19 @@
     </div>
 
     <form id="cv-form" class="desk-form" method="post" action="/preview" enctype="multipart/form-data">
+
+      <fieldset id="import-box">
+        <legend>Import existing resume <span class="optional">OCR</span></legend>
+        <p class="side-note">Upload a photo, scan or PDF of your old CV. The text is read right in your browser and the form is filled in for you. Review every field afterwards.</p>
+        <input type="file" id="ocr-file" accept="image/*,application/pdf">
+        <button type="button" id="ocr-btn" class="secondary">Read &amp; fill form</button>
+        <div class="ocr-progress" id="ocr-progress" hidden><span id="ocr-bar"></span></div>
+        <p class="ocr-status" id="ocr-status" role="status" aria-live="polite"></p>
+        <details class="ocr-raw" id="ocr-raw" hidden>
+          <summary>Show extracted text</summary>
+          <textarea id="ocr-text" rows="8" readonly></textarea>
+        </details>
+      </fieldset>
 
       <fieldset>
         <legend>Template</legend>
@@ -65,6 +107,13 @@
             <span class="tpl-swatch swatch-myy"><span></span><span></span></span>
             <span class="tpl-name">MYY</span>
           </label>
+          {% for key, label in extra_templates %}
+          <label class="tpl-card">
+            <input type="radio" name="template" value="{{ key }}">
+            <span class="tpl-swatch swatch-{{ key }}"></span>
+            <span class="tpl-name">{{ label }}</span>
+          </label>
+          {% endfor %}
         </div>
       </fieldset>
 
@@ -176,8 +225,34 @@
         <button type="button" class="add-row" data-template="cert-template" data-target="cert-rows">+ Add certification</button>
       </fieldset>
 
-      <div class="desk-actions">
-        <button type="submit" formaction="/cv" formtarget="_blank" class="primary">Open print-ready CV ↗</button>
+      <fieldset id="ats-box">
+        <legend>Job match <span class="optional">ATS check</span></legend>
+        <label>Paste a job description
+          <textarea id="jd-text" rows="5" placeholder="Paste the job posting here to see which keywords your resume is missing."></textarea>
+        </label>
+        <button type="button" id="ats-btn" class="secondary">Check my resume</button>
+        <div id="ats-result" class="ats-result" hidden></div>
+      </fieldset>
+
+      <fieldset id="backup-box">
+        <legend>Backup</legend>
+        <p class="side-note">Download a copy of your CV data to keep it, then load it back later. (The photo is not included.)</p>
+        <div class="btn-row">
+          <button type="button" class="secondary" id="export-json">Download .json</button>
+          <button type="button" class="secondary" id="import-json-btn">Load .json</button>
+          <button type="button" class="secondary danger" id="clear-form">Clear all</button>
+        </div>
+        <input type="file" id="import-json" accept="application/json,.json" hidden>
+      </fieldset>
+
+      <div class="desk-actions" id="pdf-box">
+        <button type="button" id="pdf-create" class="primary">Create PDF</button>
+        <p class="pdf-status" id="pdf-status" role="status" aria-live="polite" hidden>
+          <span class="pdf-spin" aria-hidden="true"></span><span id="pdf-status-text">Creating your PDF…</span>
+        </p>
+        <a id="pdf-download" class="primary pdf-download" hidden>Download PDF ↓</a>
+        <p class="side-note pdf-note" id="pdf-note" hidden></p>
+        <button type="button" id="pdf-fallback" class="secondary" hidden>Open print view ↗</button>
       </div>
     </form>
   </aside>

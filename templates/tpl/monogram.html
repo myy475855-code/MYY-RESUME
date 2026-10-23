@@ -1,0 +1,24 @@
+{% import "tpl/_blocks.html" as b %}
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
+{% set parts = (full_name or "Your Name").split() %}
+<article class="resume rx resume--monogram mg-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="mg-header">
+    <div class="mg-mark" aria-hidden="true">{{ ((parts[0][0]) ~ (parts[-1][0] if parts | length > 1 else "")) | upper }}</div>
+    <h1 class="mg-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="mg-role">{{ title }}</p>{% endif %}
+    <p class="mg-contact">{{ contacts | join("  ·  ") }}</p>
+  </header>
+  {{ b.summary(summary, "mg") }}
+  <div class="mg-body">
+    <div class="mg-col">
+      {{ b.experience(experience, "mg") }}
+      {{ b.projects(projects, "mg") }}
+    </div>
+    <div class="mg-col">
+      {{ b.education(education, "mg") }}
+      {{ b.skills(skill_groups, "mg", "Skills", true) }}
+      {{ b.certs(certifications, "mg") }}
+      {{ b.languages(languages, "mg") }}
+    </div>
+  </div>
+</article>

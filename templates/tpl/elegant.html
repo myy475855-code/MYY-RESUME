@@ -1,0 +1,17 @@
+{% import "tpl/_blocks.html" as b %}
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
+<article class="resume rx resume--elegant el-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="el-header">
+    <h1 class="el-name">{{ full_name or "Your Name" }}</h1>
+    <div class="el-orn" aria-hidden="true">◆</div>
+    {% if title %}<p class="el-role">{{ title }}</p>{% endif %}
+    <p class="el-contact">{{ contacts | join("   ·   ") }}</p>
+  </header>
+  {{ b.summary(summary, "el", "About") }}
+  {{ b.experience(experience, "el") }}
+  {{ b.education(education, "el") }}
+  {{ b.skills(skill_groups, "el") }}
+  {{ b.projects(projects, "el") }}
+  {{ b.certs(certifications, "el") }}
+  {{ b.languages(languages, "el") }}
+</article>

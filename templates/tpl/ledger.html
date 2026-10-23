@@ -1,23 +1,26 @@
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
 <article class="resume resume--ledger lg-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
-  <div class="lg-masthead">
-    <p class="lg-kicker">Career Edition · Issue No. 01 · {{ generated_on }}</p>
+
+  <header class="lg-masthead">
+    <div class="lg-ears">
+      <span>Vol. 01 · Career Edition</span>
+      <span class="lg-ears-mid">The Curriculum Vitae</span>
+      <span>{{ generated_on }}</span>
+    </div>
+    <div class="lg-rule-set"><i class="lg-rule-thick"></i><i class="lg-rule-thin"></i></div>
     <h1 class="lg-name">{{ full_name or "Your Name" }}</h1>
     {% if title %}<p class="lg-role">{{ title }}</p>{% endif %}
-    <div class="lg-rule-set"><span class="lg-rule-thick"></span><span class="lg-rule-thin"></span></div>
-  </div>
+    <div class="lg-rule-set lg-rule-set--rev"><i class="lg-rule-thin"></i><i class="lg-rule-thick"></i></div>
+  </header>
 
-  <div class="lg-contact-bar">
-    {% if email %}<span>{{ email }}</span>{% endif %}
-    {% if phone %}<span>{{ phone }}</span>{% endif %}
-    {% if location %}<span>{{ location }}</span>{% endif %}
-    {% if website %}<span>{{ website }}</span>{% endif %}
-    {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
-    {% if github %}<span>{{ github }}</span>{% endif %}
-  </div>
+  {% if contacts %}
+  <div class="lg-dateline">{% for c in contacts %}<span>{{ c }}</span>{% endfor %}</div>
+  {% endif %}
 
   {% if summary %}
   <section class="lg-lede">
-    <p>{{ summary }}</p>
+    <span class="lg-kicker">The Profile</span>
+    <p class="lg-lede-text">{{ summary }}</p>
   </section>
   {% endif %}
 
@@ -27,16 +30,17 @@
       <section class="lg-section">
         <h2 class="lg-heading">Experience</h2>
         {% for job in experience %}
-        <div class="lg-entry">
-          <div class="lg-entry-head">
-            <span class="lg-entry-title">{{ job.exp_role }}{% if job.exp_company %}, {{ job.exp_company }}{% endif %}</span>
-            <span class="lg-entry-date">{% if job.exp_start or job.exp_end %}{{ job.exp_start }}–{{ job.exp_end or "Present" }}{% endif %}</span>
-          </div>
-          {% if job.exp_location %}<p class="lg-entry-sub">{{ job.exp_location }}</p>{% endif %}
+        <article class="lg-entry">
+          <h3 class="lg-entry-title">{{ job.exp_role }}</h3>
+          <p class="lg-byline">
+            {% if job.exp_company %}<b>{{ job.exp_company }}</b>{% endif %}
+            {% if job.exp_location %}<span>{{ job.exp_location }}</span>{% endif %}
+            {% if job.exp_start or job.exp_end %}<span>{% if job.exp_start and job.exp_end %}{{ job.exp_start }}–{{ job.exp_end }}{% elif job.exp_start %}{{ job.exp_start }}–Present{% else %}{{ job.exp_end }}{% endif %}</span>{% endif %}
+          </p>
           {% if job.bullets %}
           <ul class="lg-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
           {% endif %}
-        </div>
+        </article>
         {% endfor %}
       </section>
       {% endif %}
@@ -45,59 +49,65 @@
       <section class="lg-section">
         <h2 class="lg-heading">Projects</h2>
         {% for p in projects %}
-        <div class="lg-entry">
-          <div class="lg-entry-head">
-            <span class="lg-entry-title">{{ p.proj_name }}{% if p.proj_link %} — {{ p.proj_link }}{% endif %}</span>
-          </div>
-          {% if p.proj_desc %}<p class="lg-entry-sub">{{ p.proj_desc }}</p>{% endif %}
-        </div>
+        <article class="lg-entry">
+          <h3 class="lg-entry-title">{{ p.proj_name }}</h3>
+          {% if p.proj_link %}<p class="lg-byline"><span>{{ p.proj_link }}</span></p>{% endif %}
+          {% if p.proj_desc %}<p class="lg-text">{{ p.proj_desc }}</p>{% endif %}
+        </article>
         {% endfor %}
       </section>
       {% endif %}
     </div>
 
-    <div class="lg-col-side">
+    <aside class="lg-col-side">
       {% if education %}
-      <section class="lg-section">
-        <h2 class="lg-heading lg-heading--side">Education</h2>
+      <section class="lg-panel">
+        <h2 class="lg-panel-title">Education</h2>
         {% for ed in education %}
-        <div class="lg-entry lg-entry--side">
-          <p class="lg-entry-title">{{ ed.edu_degree }}</p>
-          {% if ed.edu_school %}<p class="lg-entry-sub">{{ ed.edu_school }}</p>{% endif %}
-          <p class="lg-entry-date">{% if ed.edu_start or ed.edu_end %}{{ ed.edu_start }}–{{ ed.edu_end }}{% endif %}</p>
+        <div class="lg-edu">
+          <p class="lg-edu-degree">{{ ed.edu_degree }}</p>
+          {% if ed.edu_school %}<p class="lg-edu-school">{{ ed.edu_school }}</p>{% endif %}
+          {% if ed.edu_start or ed.edu_end %}<p class="lg-edu-date">{% if ed.edu_start and ed.edu_end %}{{ ed.edu_start }}–{{ ed.edu_end }}{% else %}{{ ed.edu_start or ed.edu_end }}{% endif %}</p>{% endif %}
+          {% if ed.edu_details %}<p class="lg-edu-note">{{ ed.edu_details }}</p>{% endif %}
         </div>
         {% endfor %}
       </section>
       {% endif %}
 
       {% if skill_groups %}
-      <section class="lg-section">
-        <h2 class="lg-heading lg-heading--side">Skills</h2>
+      <section class="lg-panel">
+        <h2 class="lg-panel-title">Skills</h2>
         {% for g in skill_groups %}
-        <p class="lg-skill-row"><strong>{{ g.skill_group }}:</strong> {{ g.skills | join(", ") }}</p>
+        <div class="lg-skill">
+          {% if g.skill_group %}<span class="lg-skill-label">{{ g.skill_group }}</span>{% endif %}
+          <p class="lg-skill-items">{{ g.skills | join(", ") }}</p>
+        </div>
         {% endfor %}
       </section>
       {% endif %}
 
       {% if certifications %}
-      <section class="lg-section">
-        <h2 class="lg-heading lg-heading--side">Certifications</h2>
+      <section class="lg-panel">
+        <h2 class="lg-panel-title">Certifications</h2>
         {% for c in certifications %}
-        <p class="lg-skill-row">{{ c.cert_name }}{% if c.cert_org %}, {{ c.cert_org }}{% endif %}{% if c.cert_year %} ({{ c.cert_year }}){% endif %}</p>
+        <p class="lg-cert"><strong>{{ c.cert_name }}</strong>{% if c.cert_org or c.cert_year %}<em>{{ c.cert_org }}{% if c.cert_org and c.cert_year %}, {% endif %}{{ c.cert_year }}</em>{% endif %}</p>
         {% endfor %}
       </section>
       {% endif %}
 
       {% if languages %}
-      <section class="lg-section">
-        <h2 class="lg-heading lg-heading--side">Languages</h2>
+      <section class="lg-panel">
+        <h2 class="lg-panel-title">Languages</h2>
         {% for l in languages %}
-        <p class="lg-skill-row">{{ l.lang_name }}{% if l.lang_level %} — {{ l.lang_level }}{% endif %}</p>
+        <p class="lg-lang"><span>{{ l.lang_name }}</span>{% if l.lang_level %}<i class="lg-leader"></i><span class="lg-lang-level">{{ l.lang_level }}</span>{% endif %}</p>
         {% endfor %}
       </section>
       {% endif %}
-    </div>
+    </aside>
   </div>
 
-  <footer class="lg-colophon">Typeset {{ generated_on }}</footer>
+  <footer class="lg-colophon">
+    <span class="lg-end">— 30 —</span>
+    <span>Typeset {{ generated_on }}</span>
+  </footer>
 </article>

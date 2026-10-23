@@ -1,7 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, Response
+from pathlib import Path
+import subprocess
 from datetime import datetime
 import re
 import base64
+
+from resume_parser import parse_resume_text
+from ats import keyword_match, health_checks
+from pdf_export import html_to_pdf, BrowserNotFound, PdfFailed
 
 app = Flask(__name__)
 MAX_PHOTO_BYTES = 3 * 1024 * 1024  # 3 MB
@@ -20,7 +26,14 @@ def _zip_fields(form, *names):
     return rows
 
 
-VALID_TEMPLATES = {"colophon", "ledger", "atlas", "mono", "studio", "myy"}
+EXTRA_TEMPLATES = [
+    ("classic", "Classic"), ("executive", "Executive"), ("elegant", "Elegant"),
+    ("minimal", "Minimal"), ("ribbon", "Ribbon"), ("timeline", "Timeline"),
+    ("banner", "Banner"), ("gradient", "Gradient"), ("bold", "Bold"),
+    ("terminal", "Terminal"), ("pastel", "Pastel"), ("monogram", "Monogram"),
+    ("cameo", "Cameo"), ("meridian", "Meridian"), ("profile", "Profile"),
+]
+VALID_TEMPLATES = {"colophon", "ledger", "atlas", "mono", "studio", "myy"} | {k for k, _ in EXTRA_TEMPLATES}
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
@@ -102,7 +115,7 @@ def build_context(form, files=None):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", extra_templates=EXTRA_TEMPLATES)
 
 
 @app.route("/preview", methods=["GET", "POST"])
@@ -115,6 +128,47 @@ def preview():
 def cv():
     ctx = build_context(request.values, request.files)
     return render_template("print.html", **ctx)
+
+
+@app.route("/api/pdf", methods=["POST"])
+def api_pdf():
+    """Render the CV to a real A4 PDF and send it back."""
+    ctx = build_context(request.form, request.files)
+    css = (Path(app.static_folder) / "style.css").read_text(encoding="utf-8")
+    html = render_template("print.html", pdf=True, inline_css=css, **ctx)
+    try:
+        pdf = html_to_pdf(html)
+    except BrowserNotFound:
+        return jsonify(error="no_browser"), 501
+    except (PdfFailed, subprocess.SubprocessError, OSError) as exc:
+        app.logger.warning("PDF export failed: %s", exc)
+        return jsonify(error="failed"), 500
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", ctx.get("full_name", "")).strip("-") or "Resume"
+    return Response(pdf, mimetype="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="{slug}-CV.pdf"'})
+
+
+@app.route("/api/parse-resume", methods=["POST"])
+def api_parse_resume():
+    """Turn OCR'd / extracted resume text into form fields."""
+    payload = request.get_json(silent=True) or {}
+    text = payload.get("text", "")
+    if not isinstance(text, str) or not text.strip():
+        return jsonify({"error": "No text received."}), 400
+    if len(text) > 200_000:
+        return jsonify({"error": "Text too long."}), 413
+    return jsonify(parse_resume_text(text))
+
+
+@app.route("/api/ats-match", methods=["POST"])
+def api_ats_match():
+    """Compare the current form data against a pasted job description."""
+    ctx = build_context(request.form, {})
+    jd = request.form.get("job_description", "")
+    return jsonify({
+        "match": keyword_match(ctx, jd) if jd.strip() else None,
+        "checks": health_checks(ctx),
+    })
 
 
 if __name__ == "__main__":

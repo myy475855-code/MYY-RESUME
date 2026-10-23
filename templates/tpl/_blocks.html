@@ -1,0 +1,113 @@
+{#- Shared section macros for the "rx" template family.  Each takes a class prefix `p`
+    so templates can style their own look on top of the generic rx-* base classes. -#}
+
+{% macro dates(s, e, present=False, sep="–") -%}
+{%- if s or e -%}{{ s }}{% if s and (e or present) %}{{ sep }}{% endif %}{{ e or ("Present" if present else "") }}{%- endif -%}
+{%- endmacro %}
+
+{% macro avatar(photo, name, p) -%}
+<div class="rx-avatar {{ p }}-avatar">{% if photo %}<img src="{{ photo }}" alt="{{ name }}">{% else %}<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#ece8e0"/><circle cx="50" cy="40" r="18" fill="#c7c2b8"/><path d="M14 96 C14 70 30 58 50 58 C70 58 86 70 86 96 Z" fill="#c7c2b8"/></svg>{% endif %}</div>
+{%- endmacro %}
+
+{% macro contact(items, p) -%}
+{% if items %}<ul class="rx-contact {{ p }}-contact">{% for c in items %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
+{%- endmacro %}
+
+{% macro summary(text, p, title="Profile") -%}
+{% if text %}
+<section class="rx-section {{ p }}-section {{ p }}-section--summary">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  <p class="rx-summary {{ p }}-summary">{{ text }}</p>
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro experience(items, p, title="Experience") -%}
+{% if items %}
+<section class="rx-section {{ p }}-section {{ p }}-section--exp">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  {% for job in items %}
+  <div class="rx-entry {{ p }}-entry">
+    <div class="rx-entry-head {{ p }}-entry-head">
+      <span class="rx-entry-title {{ p }}-entry-title">{{ job.exp_role }}</span>
+      <span class="rx-entry-date {{ p }}-entry-date">{{ dates(job.exp_start, job.exp_end, true) }}</span>
+    </div>
+    {% if job.exp_company or job.exp_location %}<div class="rx-entry-sub {{ p }}-entry-sub">{{ job.exp_company }}{% if job.exp_company and job.exp_location %} · {% endif %}{{ job.exp_location }}</div>{% endif %}
+    {% if job.bullets %}<ul class="rx-bullets {{ p }}-bullets">{% for b in job.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro education(items, p, title="Education") -%}
+{% if items %}
+<section class="rx-section {{ p }}-section {{ p }}-section--edu">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  {% for ed in items %}
+  <div class="rx-entry {{ p }}-entry">
+    <div class="rx-entry-head {{ p }}-entry-head">
+      <span class="rx-entry-title {{ p }}-entry-title">{{ ed.edu_degree }}</span>
+      <span class="rx-entry-date {{ p }}-entry-date">{{ dates(ed.edu_start, ed.edu_end) }}</span>
+    </div>
+    {% if ed.edu_school or ed.edu_location %}<div class="rx-entry-sub {{ p }}-entry-sub">{{ ed.edu_school }}{% if ed.edu_school and ed.edu_location %} · {% endif %}{{ ed.edu_location }}</div>{% endif %}
+    {% if ed.edu_details %}<div class="rx-detail {{ p }}-detail">{{ ed.edu_details }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro skills(groups, p, title="Skills", pills=False) -%}
+{% if groups %}
+<section class="rx-section {{ p }}-section {{ p }}-section--skills">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  {% for g in groups %}
+    {% if pills %}
+    <div class="rx-pills {{ p }}-pills">{% for s in g.skills %}<span class="rx-pill {{ p }}-pill">{{ s }}</span>{% endfor %}</div>
+    {% else %}
+    <p class="rx-skill-row {{ p }}-skill-row">{% if g.skill_group %}<strong>{{ g.skill_group }}:</strong> {% endif %}{{ g.skills | join(", ") }}</p>
+    {% endif %}
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro projects(items, p, title="Projects") -%}
+{% if items %}
+<section class="rx-section {{ p }}-section {{ p }}-section--proj">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  {% for pr in items %}
+  <div class="rx-entry {{ p }}-entry">
+    <div class="rx-entry-head {{ p }}-entry-head">
+      <span class="rx-entry-title {{ p }}-entry-title">{{ pr.proj_name }}</span>
+      {% if pr.proj_link %}<span class="rx-entry-date {{ p }}-entry-date">{{ pr.proj_link }}</span>{% endif %}
+    </div>
+    {% if pr.proj_desc %}<div class="rx-detail {{ p }}-detail">{{ pr.proj_desc }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro certs(items, p, title="Certifications") -%}
+{% if items %}
+<section class="rx-section {{ p }}-section {{ p }}-section--cert">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  {% for c in items %}
+  <p class="rx-cert {{ p }}-cert"><strong>{{ c.cert_name }}</strong>{% if c.cert_org or c.cert_year %} <span class="rx-meta">{{ c.cert_org }}{% if c.cert_org and c.cert_year %} · {% endif %}{{ c.cert_year }}</span>{% endif %}</p>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro languages(items, p, title="Languages") -%}
+{% if items %}
+<section class="rx-section {{ p }}-section {{ p }}-section--lang">
+  <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
+  <ul class="rx-list {{ p }}-list">
+    {% for l in items %}<li>{{ l.lang_name }}{% if l.lang_level %} <span class="rx-meta">{{ l.lang_level }}</span>{% endif %}</li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+{%- endmacro %}
