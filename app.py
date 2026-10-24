@@ -32,6 +32,10 @@ EXTRA_TEMPLATES = [
     ("banner", "Banner"), ("gradient", "Gradient"), ("bold", "Bold"),
     ("terminal", "Terminal"), ("pastel", "Pastel"), ("monogram", "Monogram"),
     ("cameo", "Cameo"), ("meridian", "Meridian"), ("profile", "Profile"),
+    ("blueprint", "Blueprint"), ("academic", "Academic"), ("compact", "Compact"),
+    ("mosaic", "Mosaic"), ("sunrise", "Sunrise"), ("midnight", "Midnight"),
+    ("brutalist", "Brutalist"), ("spine", "Spine"), ("folder", "Folder"),
+    ("triptych", "Triptych"),
 ]
 VALID_TEMPLATES = {"colophon", "ledger", "atlas", "mono", "studio", "myy"} | {k for k, _ in EXTRA_TEMPLATES}
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")

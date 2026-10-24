@@ -1,0 +1,20 @@
+{% import "tpl/_blocks.html" as b %}
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
+<article class="resume rx resume--mosaic mz-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="mz-header">
+    <div>
+      <h1 class="mz-name">{{ full_name or "Your Name" }}</h1>
+      {% if title %}<p class="mz-role">{{ title }}</p>{% endif %}
+    </div>
+    {{ b.contact(contacts, "mz") }}
+  </header>
+  <div class="mz-grid">
+    {{ b.summary(summary, "mz", "About") }}
+    {{ b.experience(experience, "mz") }}
+    {{ b.education(education, "mz") }}
+    {{ b.skills(skill_groups, "mz", "Skills", true) }}
+    {{ b.projects(projects, "mz") }}
+    {{ b.certs(certifications, "mz") }}
+    {{ b.languages(languages, "mz") }}
+  </div>
+</article>

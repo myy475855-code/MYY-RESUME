@@ -60,7 +60,7 @@ Then open http://127.0.0.1:5000 in your browser.
 - `templates/_preview.html` — the shared CV layout, rendered by both
   `/preview` and `/cv`
 - `templates/print.html` — wraps `_preview.html` for printing/PDF export
-- `templates/tpl/_blocks.html` — shared section macros used by the 15 added
+- `templates/tpl/_blocks.html` — shared section macros used by the 25 added
   templates (add a new look by writing a layout file that calls them, then a
   CSS block and a swatch)
 - `static/style.css`, `static/app.js` — styling and the add/remove-row +
@@ -68,7 +68,7 @@ Then open http://127.0.0.1:5000 in your browser.
 
 ## Templates
 
-Pick a look from the swatches at the top of the form. All 21 read from the
+Pick a look from the swatches at the top of the form. All 31 read from the
 same data, so switching doesn't lose anything you've typed.
 
 **Original six**
@@ -97,6 +97,19 @@ same data, so switching doesn't lose anything you've typed.
 - **Cameo** — tinted left sidebar with a round photo
 - **Meridian** — dark right-hand sidebar with about, contact and skills
 - **Profile** — photo header, then a main column and a side column
+
+**Added ten more**
+
+- **Blueprint** — grid-paper background, framed title block with labelled contact details
+- **Academic** — serif CV style with dates in a left column
+- **Compact** — dense layout for people with a lot to fit on a page
+- **Mosaic** — rounded cards flowing in two columns
+- **Sunrise** — warm gradient header with a wave edge
+- **Midnight** — dark theme with a light accent
+- **Brutalist** — thick borders, hard shadows, loud colour
+- **Spine** — section names run vertically down the left margin
+- **Folder** — file-folder tab for the header and each section
+- **Triptych** — three columns: skills, experience, education
 
 The accent colour picker works with every template.
 

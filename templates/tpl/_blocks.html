@@ -75,7 +75,7 @@
 
 {% macro projects(items, p, title="Projects") -%}
 {% if items %}
-<section class="rx-section {{ p }}-section {{ p }}-section--proj">
+<section class="rx-section rx-section--proj {{ p }}-section {{ p }}-section--proj">
   <h2 class="rx-heading {{ p }}-heading">{{ title }}</h2>
   {% for pr in items %}
   <div class="rx-entry {{ p }}-entry">

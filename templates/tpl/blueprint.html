@@ -1,0 +1,21 @@
+{% import "tpl/_blocks.html" as b %}
+{% set pairs = [("Email", email), ("Phone", phone), ("Location", location), ("Web", website), ("LinkedIn", linkedin), ("GitHub", github)] %}
+<article class="resume rx resume--blueprint bp-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="bp-header">
+    <div class="bp-id">
+      <p class="bp-tag">// CURRICULUM VITAE</p>
+      <h1 class="bp-name">{{ full_name or "Your Name" }}</h1>
+      {% if title %}<p class="bp-role">{{ title }}</p>{% endif %}
+    </div>
+    <dl class="bp-block">
+      {% for k, v in pairs %}{% if v %}<div><dt>{{ k }}</dt><dd>{{ v }}</dd></div>{% endif %}{% endfor %}
+    </dl>
+  </header>
+  {{ b.summary(summary, "bp") }}
+  {{ b.experience(experience, "bp") }}
+  {{ b.education(education, "bp") }}
+  {{ b.skills(skill_groups, "bp") }}
+  {{ b.projects(projects, "bp") }}
+  {{ b.certs(certifications, "bp") }}
+  {{ b.languages(languages, "bp") }}
+</article>

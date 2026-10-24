@@ -1,0 +1,17 @@
+{% import "tpl/_blocks.html" as b %}
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
+<article class="resume rx resume--folder fd-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="fd-header">
+    <span class="fd-tab">Curriculum Vitae</span>
+    <h1 class="fd-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="fd-role">{{ title }}</p>{% endif %}
+    <p class="fd-contact">{{ contacts | join("   ·   ") }}</p>
+  </header>
+  {{ b.summary(summary, "fd") }}
+  {{ b.experience(experience, "fd") }}
+  {{ b.education(education, "fd") }}
+  {{ b.skills(skill_groups, "fd") }}
+  {{ b.projects(projects, "fd") }}
+  {{ b.certs(certifications, "fd") }}
+  {{ b.languages(languages, "fd") }}
+</article>

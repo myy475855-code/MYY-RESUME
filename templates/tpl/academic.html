@@ -1,0 +1,16 @@
+{% import "tpl/_blocks.html" as b %}
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
+<article class="resume rx resume--academic ac-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="ac-header">
+    <h1 class="ac-name">{{ full_name or "Your Name" }}</h1>
+    {% if title %}<p class="ac-role">{{ title }}</p>{% endif %}
+    {{ b.contact(contacts, "ac") }}
+  </header>
+  {{ b.summary(summary, "ac", "Research Profile") }}
+  {{ b.education(education, "ac") }}
+  {{ b.experience(experience, "ac", "Appointments & Experience") }}
+  {{ b.projects(projects, "ac", "Selected Projects") }}
+  {{ b.certs(certifications, "ac") }}
+  {{ b.skills(skill_groups, "ac", "Technical Skills") }}
+  {{ b.languages(languages, "ac") }}
+</article>

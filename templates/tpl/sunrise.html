@@ -1,0 +1,22 @@
+{% import "tpl/_blocks.html" as b %}
+{% set contacts = [email, phone, location, website, linkedin, github] | select | list %}
+<article class="resume rx resume--sunrise sr-page"{% if accent_color %} style="--accent:{{ accent_color }}"{% endif %}>
+  <header class="sr-header">
+    <div class="sr-id">
+      <h1 class="sr-name">{{ full_name or "Your Name" }}</h1>
+      {% if title %}<p class="sr-role">{{ title }}</p>{% endif %}
+      {{ b.contact(contacts, "sr") }}
+    </div>
+    {% if photo_data_uri %}{{ b.avatar(photo_data_uri, full_name, "sr") }}{% endif %}
+    <svg class="sr-wave" viewBox="0 0 720 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C110 46 230 -2 360 20 S610 42 720 14 V44 H0 Z" fill="#fff"/></svg>
+  </header>
+  <div class="sr-body">
+    {{ b.summary(summary, "sr") }}
+    {{ b.experience(experience, "sr") }}
+    {{ b.education(education, "sr") }}
+    {{ b.skills(skill_groups, "sr", "Skills", true) }}
+    {{ b.projects(projects, "sr") }}
+    {{ b.certs(certifications, "sr") }}
+    {{ b.languages(languages, "sr") }}
+  </div>
+</article>
