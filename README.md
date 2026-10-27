@@ -140,17 +140,12 @@ browser. Your CV text is sent to the chosen provider to produce the answer (the 
 Pick a look from the swatches at the top of the form. All 31 read from the
 same data, so switching doesn't lose anything you've typed.
 
-**Original six**
-
 - **Colophon** — warm paper, clay accent, typeset margin tabs
 - **Ledger** — broadsheet newspaper style, two-column body
 - **Atlas** — navy sidebar, connected timeline for experience
 - **Mono** — plain single column, ATS-safe (no color/graphics)
 - **Studio** — bold colored header band, pill tags
 - **MYY** — orange photo sidebar with contact, social links, skills, languages
-
-**Added fifteen**
-
 - **Classic** — centered serif, ruled headings; the traditional, ATS-friendly look
 - **Executive** — navy and gold, name left / contact right, double rule
 - **Elegant** — centered italic serif with ornamental dividers
@@ -166,9 +161,6 @@ same data, so switching doesn't lose anything you've typed.
 - **Cameo** — tinted left sidebar with a round photo
 - **Meridian** — dark right-hand sidebar with about, contact and skills
 - **Profile** — photo header, then a main column and a side column
-
-**Added ten more**
-
 - **Blueprint** — grid-paper background, framed title block with labelled contact details
 - **Academic** — serif CV style with dates in a left column
 - **Compact** — dense layout for people with a lot to fit on a page
