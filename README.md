@@ -44,6 +44,73 @@ Then open http://127.0.0.1:5000 in your browser.
 - **Loader:** the MYY logo animates while the page loads (`static/loader-icon.png`,
   `static/loader-word.png`, styles under "LOGO LOADER" in `style.css`).
 
+## The interface
+
+- **Three tabs** keep the form short: **Content** (your details), **Design** (templates and accent colour)
+  and **AI & Tools** (AI assistant, CV import, job match, backup).
+- **Section chips** at the top of Content jump to any section, show how many entries it has, and follow
+  your scroll. Every section can be folded away.
+- **Entry cards** (jobs, education, projects...) show a title built from what you typed, can be folded,
+  **moved up/down**, and deleted with an **Undo** toast. Long lists arrive folded so they are easy to scan.
+- **CV completeness** meter: a live score with a checklist of what would make the CV stronger; click an
+  item to jump to the field.
+- **Template picker** with style filters (Classic, Modern, Creative, Sidebar, Bold).
+- **Preview toolbar**: zoom out/in or fit-to-width, and the page size used for the PDF.
+- **On phones** the editor and the preview each get the whole screen, with an Edit / Preview switch.
+- Light and dark themes, keyboard-friendly tabs and sections, and non-blocking toasts and dialogs.
+
+## Daily limits
+
+To keep a public site from being drained, each visitor can create a limited number
+of PDFs and make a limited number of AI requests per day.
+
+| Setting (put it in `.env`) | Default | Meaning |
+|---|---|---|
+| `PDF_DAILY_LIMIT` | `4` | PDFs per visitor per day (set `3` for three) |
+| `AI_DAILY_LIMIT` | `10` | AI requests per visitor per day |
+| `TRUST_PROXY` | off | set to `1` when running behind nginx / a hosting proxy so the real visitor IP is used |
+| `USAGE_DB` | `usage.db` | where counts are stored (survives restarts) |
+
+- "Per day" is a rolling 24 hours: a use stops counting 24 hours after it happened.
+- Visitors are told how many they have left, and when the next one frees up.
+- The print-view fallback counts toward the PDF limit too, so it can't be used to get around it.
+- A PDF or AI request that **fails** is not counted.
+- There are no accounts, so a "visitor" is a browser (cookie). Clearing cookies gives a fresh
+  allowance, but each network address also has a ceiling of 5× the personal limit, which stops
+  anyone abusing that. For a strict per-person limit you would need user logins.
+
+## AI assistant (Gemini or Claude)
+
+The **AI assistant** panel can analyse your CV (score, strengths, what to fix, missing
+keywords), suggest improvements with one-click **Apply** buttons (summary, bullet points,
+skills), and write a summary or bullet points for a role. It sticks to what is in your CV and
+uses visible `[placeholders]` (like `[X%]`) instead of inventing numbers.
+
+Turn it on in two steps:
+
+1. Get a free Gemini key at <https://aistudio.google.com/apikey>.
+2. Open the **`.env`** file in the project folder, paste the key after `GEMINI_API_KEY=`
+   (no quotes), save, and restart the app.
+
+```
+GEMINI_API_KEY=paste-your-key-here
+AI_PROVIDER=gemini
+GEMINI_MODEL=gemini-flash-latest
+```
+
+The app prints `AI assistant : ON — Google Gemini (...)` when it starts if the key was found.
+Real environment variables (for example from a hosting dashboard) override the `.env` file.
+`.env.example` is a clean copy to start from. **Never share or upload your `.env`** once it
+contains a key; it is already listed in `.gitignore`.
+
+Prefer Claude instead? Put `ANTHROPIC_API_KEY=...` in `.env`.
+
+Other settings: `AI_PROVIDER` (`gemini` or `anthropic`, if both keys are set), `GEMINI_MODEL`
+(default `gemini-flash-latest`), `ANTHROPIC_MODEL` (default `claude-haiku-5-5`). Model names
+change over time, so set these if your provider has retired a default. Without a key the
+panel simply shows a short setup hint. The key stays on the server and is never sent to the
+browser. Your CV text is sent to the chosen provider to produce the answer (the page says so).
+
 ## How it works
 
 - `app.py` — Flask routes:
@@ -52,7 +119,9 @@ Then open http://127.0.0.1:5000 in your browser.
     the live preview (called automatically as you type)
   - `POST /api/parse-resume` — turns extracted text into form fields
     (`resume_parser.py`)
-  - `POST /api/pdf` — renders the CV to an A4 PDF (`pdf_export.py`)
+  - `POST /api/pdf` — renders the CV to an A4 PDF (`pdf_export.py`), counted against the daily limit
+  - `POST /api/ai/analyse`, `/api/ai/suggest`, `/api/ai/generate` — AI assistant (`ai_assistant.py`)
+  - `GET /api/quota` — what the visitor has left today (`usage_limit.py`)
   - `POST /api/ats-match` — keyword match + health checks (`ats.py`)
   - `POST /cv` — returns a full, print-ready CV page (opened in a new tab
     by the "Open print-ready CV" button)

@@ -44,80 +44,122 @@
   })();
 </script>
 
-<div class="app">
+<div class="app" id="app" data-view="edit">
 
-  <aside class="desk">
-    <div class="desk-brand">
-      <span class="desk-mark">¶</span>
-      <div>
-        <h1>MYY Resume</h1>
-        <p>A CV, typeset as you write it.</p>
+  <aside class="desk" id="desk">
+    <header class="desk-top">
+      <div class="desk-brand">
+        <span class="brand-mark"><img src="{{ url_for('static', filename='logo-mark.png') }}" width="40" height="40" alt=""></span>
+        <div class="brand-text">
+          <h1>MYY Resume</h1>
+          <p>Resume Creator</p>
+        </div>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light and dark mode" title="Toggle light/dark mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+        </button>
       </div>
-      <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light and dark mode" title="Toggle light/dark mode">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+
+      <button type="button" class="strength" id="strength-btn" aria-expanded="false" aria-controls="strength-pop">
+        <span class="strength-label">CV completeness</span>
+        <span class="strength-bar" aria-hidden="true"><i id="strength-fill"></i></span>
+        <span class="strength-val" id="strength-val">0%</span>
       </button>
-    </div>
+      <div class="strength-pop" id="strength-pop" hidden></div>
+
+      <div class="tabs" role="tablist" aria-label="Editor sections">
+        <button type="button" role="tab" class="tab is-active" id="tab-content" data-tab="content" aria-selected="true" aria-controls="panel-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Content</button>
+        <button type="button" role="tab" class="tab" id="tab-design" data-tab="design" aria-selected="false" aria-controls="panel-design" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Design</button>
+        <button type="button" role="tab" class="tab" id="tab-tools" data-tab="tools" aria-selected="false" aria-controls="panel-tools" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4Z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8Z"/></svg>AI &amp; Tools</button>
+      </div>
+    </header>
 
     <form id="cv-form" class="desk-form" method="post" action="/preview" enctype="multipart/form-data">
 
-      <fieldset id="import-box">
-        <legend>Import existing resume <span class="optional">OCR</span></legend>
-        <p class="side-note">Upload a photo, scan or PDF of your old CV. The text is read right in your browser and the form is filled in for you. Review every field afterwards.</p>
-        <input type="file" id="ocr-file" accept="image/*,application/pdf">
-        <button type="button" id="ocr-btn" class="secondary">Read &amp; fill form</button>
-        <div class="ocr-progress" id="ocr-progress" hidden><span id="ocr-bar"></span></div>
-        <p class="ocr-status" id="ocr-status" role="status" aria-live="polite"></p>
-        <details class="ocr-raw" id="ocr-raw" hidden>
-          <summary>Show extracted text</summary>
-          <textarea id="ocr-text" rows="8" readonly></textarea>
-        </details>
+      <div class="tab-panel" id="panel-content" data-panel="content" role="tabpanel" aria-labelledby="tab-content">
+        <nav class="jump" id="jump" aria-label="Jump to a section"></nav>
+<fieldset id="sec-basics" data-section="Basics">
+        <legend>Basics</legend>
+        <label>Full name<input type="text" name="full_name" placeholder="Jordan Avery" required></label>
+        <label>Role / headline<input type="text" name="title" placeholder="Senior Product Designer"></label>
+        <label>Photo <span class="hint">optional — used by the MYY template, max 3MB</span>
+          <input type="file" name="photo_file" accept="image/*" class="file-input">
+        </label>
+        <div class="grid-2">
+          <label>Email<input type="email" name="email" placeholder="jordan@email.com"></label>
+          <label>Phone<input type="text" name="phone" placeholder="+1 555 010 2030"></label>
+        </div>
+        <div class="grid-2">
+          <label>Location<input type="text" name="location" placeholder="Austin, TX"></label>
+          <label>Website<input type="text" name="website" placeholder="jordanavery.com"></label>
+        </div>
+        <div class="grid-2">
+          <label>LinkedIn<input type="text" name="linkedin" placeholder="/in/jordanavery"></label>
+          <label>GitHub<input type="text" name="github" placeholder="github.com/javery"></label>
+        </div>
       </fieldset>
+<fieldset id="sec-summary" data-section="Summary">
+        <legend>Summary</legend>
+        <label>Summary<textarea name="summary" rows="3" placeholder="A two or three sentence pitch — what you do, for whom, and what you're known for."></textarea></label>
+      </fieldset>
+<fieldset id="sec-experience" data-section="Experience" data-count="exp-rows">
+        <legend>Experience</legend>
+        <div id="exp-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="exp-template" data-target="exp-rows">+ Add role</button>
+      </fieldset>
+<fieldset id="sec-education" data-section="Education" data-count="edu-rows">
+        <legend>Education</legend>
+        <div id="edu-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="edu-template" data-target="edu-rows">+ Add education</button>
+      </fieldset>
+<fieldset id="sec-skills" data-section="Skills" data-count="skill-rows">
+        <legend>Skills</legend>
+        <div id="skill-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="skill-template" data-target="skill-rows">+ Add skill group</button>
+      </fieldset>
+<fieldset id="sec-languages" data-section="Languages" data-count="lang-rows">
+        <legend>Languages <span class="optional">optional</span></legend>
+        <div id="lang-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="lang-template" data-target="lang-rows">+ Add language</button>
+      </fieldset>
+<fieldset id="sec-projects" data-section="Projects" data-count="proj-rows">
+        <legend>Projects <span class="optional">optional</span></legend>
+        <div id="proj-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="proj-template" data-target="proj-rows">+ Add project</button>
+      </fieldset>
+<fieldset id="sec-certs" data-section="Certificates" data-count="cert-rows">
+        <legend>Certifications <span class="optional">optional</span></legend>
+        <div id="cert-rows" class="rows"></div>
+        <button type="button" class="add-row" data-template="cert-template" data-target="cert-rows">+ Add certification</button>
+      </fieldset>
+      </div>
 
-      <fieldset>
-        <legend>Template</legend>
+      <div class="tab-panel" id="panel-design" data-panel="design" role="tabpanel" aria-labelledby="tab-design" hidden>
+      <fieldset id="sec-template">
+        <legend>Template <span class="optional" id="tpl-count"></span></legend>
+        <div class="fchips" id="tpl-filter" role="group" aria-label="Filter templates by style">
+          <button type="button" class="fchip is-active" data-tag="all">All</button>
+          <button type="button" class="fchip" data-tag="classic">Classic</button>
+          <button type="button" class="fchip" data-tag="modern">Modern</button>
+          <button type="button" class="fchip" data-tag="creative">Creative</button>
+          <button type="button" class="fchip" data-tag="sidebar">Sidebar</button>
+          <button type="button" class="fchip" data-tag="bold">Bold</button>
+        </div>
         <div class="template-grid">
-          <label class="tpl-card">
-            <input type="radio" name="template" value="colophon" checked>
-            <span class="tpl-swatch swatch-colophon"><span></span></span>
-            <span class="tpl-name">Colophon</span>
-          </label>
-          <label class="tpl-card">
-            <input type="radio" name="template" value="ledger">
-            <span class="tpl-swatch swatch-ledger"><span></span><span></span></span>
-            <span class="tpl-name">Ledger</span>
-          </label>
-          <label class="tpl-card">
-            <input type="radio" name="template" value="atlas">
-            <span class="tpl-swatch swatch-atlas"><span></span><span></span></span>
-            <span class="tpl-name">Atlas</span>
-          </label>
-          <label class="tpl-card">
-            <input type="radio" name="template" value="mono">
-            <span class="tpl-swatch swatch-mono"><span></span></span>
-            <span class="tpl-name">Mono</span>
-          </label>
-          <label class="tpl-card">
-            <input type="radio" name="template" value="studio">
-            <span class="tpl-swatch swatch-studio"><span></span><span></span></span>
-            <span class="tpl-name">Studio</span>
-          </label>
-          <label class="tpl-card">
-            <input type="radio" name="template" value="myy">
-            <span class="tpl-swatch swatch-myy"><span></span><span></span></span>
-            <span class="tpl-name">MYY</span>
-          </label>
-          {% for key, label in extra_templates %}
-          <label class="tpl-card">
-            <input type="radio" name="template" value="{{ key }}">
-            <span class="tpl-swatch swatch-{{ key }}"></span>
-            <span class="tpl-name">{{ label }}</span>
+          {% for t in templates %}
+          <label class="tpl-card" data-tags="{{ t.tags }}">
+            <input type="radio" name="template" value="{{ t.key }}"{% if loop.first %} checked{% endif %}>
+            <span class="tpl-swatch swatch-{{ t.key }}">{{ ('<span></span>' * t.spans)|safe }}</span>
+            <span class="tpl-name">{{ t.label }}</span>
           </label>
           {% endfor %}
         </div>
       </fieldset>
 
-      <fieldset>
+<fieldset id="sec-accent">
         <legend>Accent Color</legend>
         <div class="accent-grid">
           <label class="accent-card">
@@ -162,70 +204,22 @@
           </label>
         </div>
       </fieldset>
+      </div>
 
-      <fieldset>
-        <legend>Header</legend>
-        <label>Full name<input type="text" name="full_name" placeholder="Jordan Avery" required></label>
-        <label>Role / headline<input type="text" name="title" placeholder="Senior Product Designer"></label>
-        <label>Photo <span class="hint">optional — used by the MYY template, max 3MB</span>
-          <input type="file" name="photo_file" accept="image/*" class="file-input">
-        </label>
-        <div class="grid-2">
-          <label>Email<input type="email" name="email" placeholder="jordan@email.com"></label>
-          <label>Phone<input type="text" name="phone" placeholder="+1 555 010 2030"></label>
-        </div>
-        <div class="grid-2">
-          <label>Location<input type="text" name="location" placeholder="Austin, TX"></label>
-          <label>Website<input type="text" name="website" placeholder="jordanavery.com"></label>
-        </div>
-        <div class="grid-2">
-          <label>LinkedIn<input type="text" name="linkedin" placeholder="/in/jordanavery"></label>
-          <label>GitHub<input type="text" name="github" placeholder="github.com/javery"></label>
-        </div>
+      <div class="tab-panel" id="panel-tools" data-panel="tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
+<fieldset id="import-box">
+        <legend>Import existing resume <span class="optional">OCR</span></legend>
+        <p class="side-note">Upload a photo, scan or PDF of your old CV. The text is read right in your browser and the form is filled in for you. Review every field afterwards.</p>
+        <input type="file" id="ocr-file" accept="image/*,application/pdf">
+        <button type="button" id="ocr-btn" class="secondary">Read &amp; fill form</button>
+        <div class="ocr-progress" id="ocr-progress" hidden><span id="ocr-bar"></span></div>
+        <p class="ocr-status" id="ocr-status" role="status" aria-live="polite"></p>
+        <details class="ocr-raw" id="ocr-raw" hidden>
+          <summary>Show extracted text</summary>
+          <textarea id="ocr-text" rows="8" readonly></textarea>
+        </details>
       </fieldset>
-
-      <fieldset>
-        <legend>Profile</legend>
-        <label>Summary<textarea name="summary" rows="3" placeholder="A two or three sentence pitch — what you do, for whom, and what you're known for."></textarea></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Experience</legend>
-        <div id="exp-rows" class="rows"></div>
-        <button type="button" class="add-row" data-template="exp-template" data-target="exp-rows">+ Add role</button>
-      </fieldset>
-
-      <fieldset>
-        <legend>Education</legend>
-        <div id="edu-rows" class="rows"></div>
-        <button type="button" class="add-row" data-template="edu-template" data-target="edu-rows">+ Add education</button>
-      </fieldset>
-
-      <fieldset>
-        <legend>Skills</legend>
-        <div id="skill-rows" class="rows"></div>
-        <button type="button" class="add-row" data-template="skill-template" data-target="skill-rows">+ Add skill group</button>
-      </fieldset>
-
-      <fieldset>
-        <legend>Languages <span class="optional">optional</span></legend>
-        <div id="lang-rows" class="rows"></div>
-        <button type="button" class="add-row" data-template="lang-template" data-target="lang-rows">+ Add language</button>
-      </fieldset>
-
-      <fieldset>
-        <legend>Projects <span class="optional">optional</span></legend>
-        <div id="proj-rows" class="rows"></div>
-        <button type="button" class="add-row" data-template="proj-template" data-target="proj-rows">+ Add project</button>
-      </fieldset>
-
-      <fieldset>
-        <legend>Certifications <span class="optional">optional</span></legend>
-        <div id="cert-rows" class="rows"></div>
-        <button type="button" class="add-row" data-template="cert-template" data-target="cert-rows">+ Add certification</button>
-      </fieldset>
-
-      <fieldset id="ats-box">
+<fieldset id="ats-box">
         <legend>Job match <span class="optional">ATS check</span></legend>
         <label>Paste a job description
           <textarea id="jd-text" rows="5" placeholder="Paste the job posting here to see which keywords your resume is missing."></textarea>
@@ -233,8 +227,28 @@
         <button type="button" id="ats-btn" class="secondary">Check my resume</button>
         <div id="ats-result" class="ats-result" hidden></div>
       </fieldset>
-
-      <fieldset id="backup-box">
+<fieldset id="ai-box">
+        <legend>AI assistant <span class="optional">GenAI</span></legend>
+        <p class="side-note" id="ai-note">Checking AI availability…</p>
+        <label>Target role <span class="optional">optional</span>
+          <input type="text" id="ai-target" maxlength="200" placeholder="e.g. Junior Python Developer">
+        </label>
+        <p class="side-note">Also uses the job description pasted under “Job match” above, if you added one.</p>
+        <div class="btn-row">
+          <button type="button" class="secondary" id="ai-analyse">Analyse my CV</button>
+          <button type="button" class="secondary" id="ai-suggest">Suggest improvements</button>
+        </div>
+        <div class="ai-gen">
+          <select id="ai-gen-target" aria-label="What should the AI write?"></select>
+          <button type="button" class="secondary" id="ai-generate">Write it</button>
+        </div>
+        <p class="ai-status" id="ai-status" role="status" aria-live="polite" hidden>
+          <span class="pdf-spin" aria-hidden="true"></span><span id="ai-status-text"></span>
+        </p>
+        <div class="ai-result" id="ai-result" hidden></div>
+        <p class="side-note ai-privacy" id="ai-privacy" hidden></p>
+      </fieldset>
+<fieldset id="backup-box">
         <legend>Backup</legend>
         <p class="side-note">Download a copy of your CV data to keep it, then load it back later. (The photo is not included.)</p>
         <div class="btn-row">
@@ -244,31 +258,69 @@
         </div>
         <input type="file" id="import-json" accept="application/json,.json" hidden>
       </fieldset>
-
-      <div class="desk-actions" id="pdf-box">
-        <button type="button" id="pdf-create" class="primary">Create PDF</button>
-        <p class="pdf-status" id="pdf-status" role="status" aria-live="polite" hidden>
-          <span class="pdf-spin" aria-hidden="true"></span><span id="pdf-status-text">Creating your PDF…</span>
-        </p>
-        <a id="pdf-download" class="primary pdf-download" hidden>Download PDF ↓</a>
-        <p class="side-note pdf-note" id="pdf-note" hidden></p>
-        <button type="button" id="pdf-fallback" class="secondary" hidden>Open print view ↗</button>
       </div>
+
     </form>
   </aside>
 
-  <main class="canvas">
-    <div class="canvas-toolbar">
-      <span class="spinner" id="spinner" aria-hidden="true"></span>
-      <span class="canvas-status" id="status">Typing updates the page on the right.</span>
+  <div class="desk-actions" id="pdf-box">
+    <div class="pdf-row">
+      <button type="button" id="pdf-create" class="primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M12 12v5M9.5 14.5 12 17l2.5-2.5"/></svg>
+        <span>Create PDF</span>
+      </button>
+      <a id="pdf-download" class="primary pdf-download" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></svg>
+        <span>Download PDF</span>
+      </a>
     </div>
-    <div class="page-wrap" id="preview">
-      <article class="resume placeholder">
-        <p>Start filling in the desk on the left — your CV will typeset itself here, line by line.</p>
-      </article>
+    <p class="pdf-status" id="pdf-status" role="status" aria-live="polite" hidden>
+      <span class="pdf-spin" aria-hidden="true"></span><span id="pdf-status-text">Creating your PDF…</span>
+    </p>
+    <p class="side-note pdf-note" id="pdf-note" hidden></p>
+    <p class="side-note pdf-quota" id="pdf-quota" hidden></p>
+    <button type="button" id="pdf-fallback" class="secondary" hidden>Open print view ↗</button>
+  </div>
+
+  <main class="canvas" id="canvas">
+    <div class="canvas-toolbar">
+      <div class="tb-left">
+        <span class="status-pill"><span class="spinner" id="spinner" aria-hidden="true"></span><span class="canvas-status" id="status">Typing updates the page on the right.</span></span>
+        <span class="page-chip" title="Page size used for the PDF">A4</span>
+      </div>
+      <div class="zoom" role="group" aria-label="Preview zoom">
+        <button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+        <button type="button" id="zoom-fit" class="zoom-label" aria-label="Fit to width" title="Fit to width"><span id="zoom-label">100%</span></button>
+        <button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+      </div>
+    </div>
+    <div class="canvas-scroll" id="canvas-scroll">
+      <div class="page-wrap" id="preview">
+        <article class="resume placeholder">
+          <p>Start filling in the form — your CV will typeset itself here, line by line.</p>
+        </article>
+      </div>
     </div>
   </main>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Switch between editing and preview">
+    <button type="button" class="is-active" data-view="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit</button>
+    <button type="button" data-view="preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
+  </nav>
 </div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<dialog id="confirm-dialog" class="dialog" aria-labelledby="confirm-title">
+  <form method="dialog" class="dialog-card">
+    <h2 id="confirm-title">Are you sure?</h2>
+    <p id="confirm-text"></p>
+    <div class="dialog-actions">
+      <button type="button" id="confirm-cancel" class="secondary">Cancel</button>
+      <button type="button" id="confirm-ok" class="primary">Continue</button>
+    </div>
+  </form>
+</dialog>
 
 <!-- Row templates (cloned by JS) -->
 <template id="exp-template">

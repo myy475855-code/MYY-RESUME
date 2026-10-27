@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily limit reached — MYY Resume</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="limit-body">
+  <main class="limit-card">
+    <p class="limit-mark">¶</p>
+    <h1>Daily limit reached</h1>
+    {% if scope == "ip" %}
+    <p>Too many PDFs have been created from your network today. Please try again in <strong>{{ wait }}</strong>.</p>
+    {% else %}
+    <p>You can create up to <strong>{{ limit }} PDF{{ "s" if limit != 1 else "" }}</strong> per day, and you've used them all. You can create another in <strong>{{ wait }}</strong>.</p>
+    {% endif %}
+    <p class="limit-note">Your CV is still in the editor, so nothing is lost.</p>
+    <a class="limit-back" href="{{ url_for('index') }}">← Back to the editor</a>
+  </main>
+</body>
+</html>
